@@ -14,7 +14,8 @@ frame_width = int(cap.get(3))
 frame_height = int(cap.get(4))
 
 # Define o codec e cria o objeto VideoWriter
-out = cv2.VideoWriter('video\\output_video.mp4', cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), 30, (frame_width, frame_height))
+fps = cap.get(cv2.CAP_PROP_FPS)
+out = cv2.VideoWriter('video\\output_video.mp4', cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), fps, (frame_width, frame_height))
 
 model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
 
@@ -101,11 +102,13 @@ while True:
             # cvzone.putTextRect(img, f' Count: {len(totalCount)}', (50, 50))
             cv2.putText(img,str(len(totalCount)),(255,100),cv2.FONT_HERSHEY_PLAIN,5,(255,0,0),8)
 
-            cv2.imshow("Image", img)
-            cv2.imshow("ImageRegion", imgRegion)
-
             # Escrever o frame no arquivo de vídeo
             out.write(img)
+
+            # Exibindo frame atual
+            img = cv2.resize(img,(640,360))
+            cv2.imshow("Image", img)
+            cv2.imshow("ImageRegion", imgRegion)
           
             if cv2.waitKey(1) & 0xFF == ord('s'): 
                 break
